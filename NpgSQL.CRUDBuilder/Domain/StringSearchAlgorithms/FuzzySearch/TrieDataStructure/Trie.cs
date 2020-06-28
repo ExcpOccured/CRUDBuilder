@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
+namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure
 {
     internal class Trie
     {
         public TrieNode root = new TrieNode(string.Empty);
 
-        public Trie()
-        {
-        }
+        public Trie() { }
 
         public Trie(IEnumerable<string> lexicon)
         {
@@ -48,7 +46,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
         
         public TrieNode GetChars(string word)
         {
-            TrieNode node = GetNode(word);
+            var node = GetNode(word);
             return node != null && node.IsCharsArray ? node : null;
         }
         

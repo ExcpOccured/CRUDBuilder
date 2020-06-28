@@ -1,8 +1,9 @@
 using System;
+using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure;
 
 namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
 {
-    internal readonly struct PropsNameCorrectorState
+    internal readonly struct FuzzyCorrectorState
     {
         public readonly TrieNode Node;
         
@@ -10,7 +11,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
         
         public readonly int AutomataOffset;
 
-        public PropsNameCorrectorState(TrieNode node, int state, int offset)
+        public FuzzyCorrectorState(TrieNode node, int state, int offset)
         {
             Node = node;
             AutomataState = state;
@@ -19,7 +20,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
 
         public override bool Equals(object obj)
         {
-            if (!(obj is PropsNameCorrectorState searchState))
+            if (!(obj is FuzzyCorrectorState searchState))
                 return false;
             
             return searchState.AutomataOffset == AutomataOffset

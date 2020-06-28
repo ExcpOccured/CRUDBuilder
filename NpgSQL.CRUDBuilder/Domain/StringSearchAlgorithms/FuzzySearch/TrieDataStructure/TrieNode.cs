@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
+namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure
 {
     internal class TrieNode
     {

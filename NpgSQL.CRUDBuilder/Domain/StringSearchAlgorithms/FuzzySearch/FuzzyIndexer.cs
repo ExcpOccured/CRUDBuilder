@@ -1,22 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat;
+using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure;
 
 namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
 {
     /// <summary>
-    /// Props name corrector uses the Levenshtein automaton and FB-Trie algorithm
+    /// Fuzzy indexer uses the Levenshtein automaton and FB-Trie algorithm
     /// to find possible corrections for the given garbled characters
     /// </summary>
-    internal class PropsNameCorrector
+    internal class FuzzyIndexer
     {
         Trie ForwardDictionary = new Trie();
 
         Trie BackwardDictionary = new Trie();
 
-        public PropsNameCorrector() { }
+        public FuzzyIndexer() { }
 
-        public PropsNameCorrector(IEnumerable<string> charactersArray)
+        public FuzzyIndexer(IEnumerable<string> charactersArray)
         {
             foreach (var characters in charactersArray)
             {
@@ -42,7 +43,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
                 return corrections;
             }
 
-            if (typo.Length <= 2)
+            if (typo.Length <= Constants.MaxLevTLength)
             {
                 return GetCorrectionStrings(typo, ForwardDictionary.root, 2).ToList();
             }
@@ -57,13 +58,13 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
             var lnode = ForwardDictionary.GetNode(left);
             if (lnode != null)
             {
-                corrections.AddRange(GetCorrectionStrings(right, lnode, 2));
+                corrections.AddRange(GetCorrectionStrings(right, lnode, Constants.MaxLevTLength));
             }
 
             var rnode = BackwardDictionary.GetNode(rright);
             if (rnode != null)
             {
-                corrections.AddRange(GetCorrectionStrings(rleft, rnode, 2)
+                corrections.AddRange(GetCorrectionStrings(rleft, rnode, Constants.MaxLevTLength)
                     .Select(letter => new string(letter.Reverse().ToArray())));
             }
 
@@ -156,9 +157,9 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
             }
 
             var automata = new LevTAutomatImitation(typo, editDistance);
-            var stack = new Stack<PropsNameCorrectorState>();
+            var stack = new Stack<Automat.FuzzyCorrectorState>();
 
-            stack.Push(new PropsNameCorrectorState(start, 0, 0));
+            stack.Push(new Automat.FuzzyCorrectorState(start, 0, 0));
 
             while (stack.Count > 0)
             {
@@ -173,7 +174,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
 
                     if ((state.AutomataOffset < typo.Length && typo[state.AutomataOffset] == letter)
                         || (state.AutomataOffset < typo.Length - 1 && typo[state.AutomataOffset + 1] == letter)
-                        || (state.AutomataOffset < typo.Length - 2 && typo[state.AutomataOffset + 2] == letter))
+                        || (state.AutomataOffset < typo.Length - Constants.MaxLevTLength && typo[state.AutomataOffset + Constants.MaxLevTLength] == letter))
                     {
                         nextState = automata.GetNextState(
                             automata.GetCharacteristicVector(letter, state.AutomataOffset));
@@ -188,7 +189,7 @@ namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
                     var nextNode = state.Node.Children[letter];
                     if (nextNode.Children.Count > 0)
                     {
-                        stack.Push(new PropsNameCorrectorState(nextNode, nextState.Value.State,
+                        stack.Push(new FuzzyCorrectorState(nextNode, nextState.Value.State,
                             nextState.Value.Offset));
                     }
 
