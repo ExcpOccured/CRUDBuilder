@@ -30,7 +30,7 @@ namespace NpgSQL.CRUDBuilder.QueryBuilders
                 NpgsqlConnection = npgsqlConnection
             };
 
-            await transactionProvider.ExecuteNonQueryAsync(BuildQuery, argumentsModel,
+            await transactionProvider.ExecuteTransaction(BuildQuery, argumentsModel,
                 ValidateTransactionArguments, cancellationToken: cancellationToken);
         }
 
