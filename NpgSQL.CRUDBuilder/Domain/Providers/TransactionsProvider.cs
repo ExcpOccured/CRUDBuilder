@@ -16,7 +16,14 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
         {
             if (connection.State == ConnectionState.Closed)
             {
-                await TryToExecuteTransactionDelegate(connection.OpenAsync, tryRestoreTransactionState);
+                var connectionOpenState =
+                    await TryToExecuteTransactionDelegate(new TransactionDelegate(connection.OpenAsync),
+                        tryRestoreTransactionState);
+
+                if (connectionOpenState.State is TransactionResultState.Failed)
+                {
+                    return connectionOpenState;
+                }
             }
 
             var query = buildQueryDelegate(transactionArgumentsModel);
@@ -26,16 +33,39 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
                 Connection = connection
             };
 
-            await TryToExecuteTransactionDelegate(sqlCommand.ExecuteNonQueryAsync, tryRestoreTransactionState);
+            TransactionResult executeDataTransactionState;
+
+            if (isDataRequestTransaction)
+            {
+                executeDataTransactionState =
+                    await TryToExecuteTransactionDelegate(new TransactionDelegate(null!,
+                        sqlCommand.ExecuteReaderAsync), tryRestoreTransactionState);
+            }
+            else
+            {
+                executeDataTransactionState = await TryToExecuteTransactionDelegate(
+                    new TransactionDelegate(sqlCommand.ExecuteNonQueryAsync), tryRestoreTransactionState);
+            }
+
+            return executeDataTransactionState;
         }
 
         private async Task<TransactionResult> TryToExecuteTransactionDelegate(
-            Func<Task> transactionDelegate,
+            TransactionDelegate transactionDelegate,
             bool tryRestoreTransactionState = true)
         {
+            NpgsqlDataReader reader = null;
+
             try
             {
-                await transactionDelegate();
+                if (transactionDelegate.QueryWithDataDelegate is null)
+                {
+                    await transactionDelegate.NonQueryDelegate();
+                }
+                else
+                {
+                    reader = await transactionDelegate.QueryWithDataDelegate();
+                }
             }
             catch (PostgresException exception)
             {
@@ -45,7 +75,14 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
 
                     try
                     {
-                        await transactionDelegate();
+                        if (transactionDelegate.QueryWithDataDelegate is null)
+                        {
+                            await transactionDelegate.NonQueryDelegate();
+                        }
+                        else
+                        {
+                            reader = await transactionDelegate.QueryWithDataDelegate();
+                        }
                     }
                     catch (PostgresException reThrowException)
                     {
@@ -58,41 +95,14 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
                 }
             }
 
-            return new TransactionResult(TransactionResultState.Completed);
-        }
-
-        private async Task<TransactionResult> TryToExecuteTransactionDelegate(
-            Func<Task<NpgsqlDataReader>> transactionDelegate,
-            bool tryRestoreTransactionState = true)
-        {
-            NpgsqlDataReader reader;
-
-            try
+            if (transactionDelegate.QueryWithDataDelegate is null)
             {
-                reader = await transactionDelegate();
+                return new TransactionResult(TransactionResultState.Completed);
             }
-            catch (PostgresException exception)
-            {
-                if (tryRestoreTransactionState && exception.IsTransient)
-                {
-                    await Task.Delay(500);
 
-                    try
-                    {
-                        await transactionDelegate();
-                    }
-                    catch (PostgresException reThrowException)
-                    {
-                        return new TransactionResult(TransactionResultState.Failed, reThrowException);
-                    }
-                }
-                else
-                {
-                    return new TransactionResult(TransactionResultState.Failed, exception);
-                }
-            }
-            
-            
+            return reader is null 
+                ? new TransactionResult(TransactionResultState.Failed) 
+                : new TransactionResult(TransactionResultState.Completed, npgsqlDataReader: reader);
         }
     }
 }

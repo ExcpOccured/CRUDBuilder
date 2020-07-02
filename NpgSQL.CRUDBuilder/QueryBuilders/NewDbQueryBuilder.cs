@@ -20,7 +20,7 @@ namespace NpgSQL.CRUDBuilder.QueryBuilders
             string dbOwner = null,
             string dbCollactionEncoding = null, CancellationToken cancellationToken = default)
         {
-            var transactionProvider = new TransactionsProvider(npgsqlConnection);
+            var transactionProvider = new DataOverTransactionProvider();
 
             var argumentsModel = new DbCreateArgumentsModel
             {
@@ -30,7 +30,7 @@ namespace NpgSQL.CRUDBuilder.QueryBuilders
                 NpgsqlConnection = npgsqlConnection
             };
 
-            await transactionProvider.ExecuteTransaction(BuildQuery, argumentsModel,
+            await transactionProvider.ExecuteNonQuery(npgsqlConnection, BuildQuery, argumentsModel,
                 ValidateTransactionArguments, cancellationToken: cancellationToken);
         }
 
@@ -56,12 +56,10 @@ namespace NpgSQL.CRUDBuilder.QueryBuilders
                 }
             }
 
-            if (dbCreateArgumentsModel.DbCollationEncoding != null)
+            if (!(dbCreateArgumentsModel.DbCollationEncoding is null) &&
+                string.IsNullOrEmpty(dbCreateArgumentsModel.DbCollationEncoding))
             {
-                if (string.IsNullOrEmpty(dbCreateArgumentsModel.DbCollationEncoding))
-                {
-                    return false;
-                }
+                return false;
             }
 
             return true;

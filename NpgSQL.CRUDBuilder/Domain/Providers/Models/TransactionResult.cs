@@ -7,13 +7,13 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers.Models
 {
     public readonly struct TransactionResult
     {
-        private readonly TransactionResultState State;
+        public readonly TransactionResultState State;
 
-        private readonly Exception? Exception;
+        public readonly Exception? Exception;
 
-        private readonly NpgsqlDataReader? DataReader;
+        public readonly NpgsqlDataReader? DataReader;
 
-        public TransactionResult(TransactionResultState state, Exception? exception = null, 
+        public TransactionResult(TransactionResultState state, Exception? exception = null,
             NpgsqlDataReader npgsqlDataReader = null)
         {
             State = state;

@@ -4,6 +4,8 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers.Models
     {
         Completed,
         
-        Failed
+        Failed,
+        
+        Canceled
     }
 }

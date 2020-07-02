@@ -3,7 +3,9 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
+using NpgSQL.CRUDBuilder.Domain.Exceptions;
 using NpgSQL.CRUDBuilder.Domain.Models.Interfaces;
+using NpgSQL.CRUDBuilder.Domain.Providers.Models;
 
 namespace NpgSQL.CRUDBuilder.Domain.Providers
 {
@@ -16,7 +18,14 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
             Func<ITransactionArgumentsModel, bool> dataPostValidateDelegate = null,
             CancellationToken cancellationToken = default)
         {
-            var transactionProvider = 
+            var transactionExecuteState = await RunDataTransaction(connection, buildQueryDelegate,
+                transactionArgumentsModel, dataPreValidateDelegate, false, 
+                dataPostValidateDelegate, cancellationToken);
+
+            if (transactionExecuteState.State is TransactionResultState.Failed)
+            {
+                
+            }
         }
 
         public async Task<TData> ExecuteData<TData>(NpgsqlConnection connection,
@@ -26,42 +35,43 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
             Func<ITransactionArgumentsModel, bool> dataPostValidateDelegate = null,
             CancellationToken cancellationToken = default) where TData : class
         {
+            throw new NotImplementedException();
         }
 
-        private async Task RunDataTransaction(NpgsqlConnection connection,
+        private async Task<TransactionResult> RunDataTransaction(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
-            Func<ITransactionArgumentsModel, bool> dataPreValidateDelegate,
-            Func<ITransactionArgumentsModel, bool> dataPostValidateDelegate = null,
+            Func<ITransactionArgumentsModel, bool> preValidateDelegate,
+            bool isDataRequestTransaction,
+            Func<ITransactionArgumentsModel, bool> postValidateDelegate = null,
             CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                if (connection.State == ConnectionState.Open)
-                {
-                    await connection.DisposeAsync();
-                }
-
-                return;
+                return new TransactionResult(TransactionResultState.Canceled);
             }
 
-            if (!dataPreValidateDelegate(transactionArgumentsModel))
+            if (!preValidateDelegate(transactionArgumentsModel))
             {
-                // TODO: Create exception type resolver
-                throw new ArgumentException();
+                throw new InvalidTransactionArgumentException();
             }
 
-            if (dataPostValidateDelegate != null)
+            if (!(postValidateDelegate is null))
             {
-                if (!dataPostValidateDelegate(transactionArgumentsModel))
+                if (!postValidateDelegate(transactionArgumentsModel))
                 {
-                    throw new ArgumentException();
+                    throw new InvalidTransactionArgumentException();
                 }
             }
 
-            var transactionProvider = new TransactionsProvider(connection);
+            if (!(connection.State is ConnectionState.Open
+                  || connection.State is ConnectionState.Closed))
+            {
+                throw new CorruptedConnectionException();
+            }
 
-            var transactionResult = await transactionProvider.ExecuteTransaction(buildQueryDelegate,)
+            return await new TransactionsProvider().ExecuteTransaction(connection, buildQueryDelegate,
+                transactionArgumentsModel, isDataRequestTransaction);
         }
     }
 }
