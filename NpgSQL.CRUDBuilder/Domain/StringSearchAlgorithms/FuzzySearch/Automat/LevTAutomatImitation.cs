@@ -1,6 +1,7 @@
 using System;
+using NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Models;
 
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
     internal class LevTAutomatImitation
     {

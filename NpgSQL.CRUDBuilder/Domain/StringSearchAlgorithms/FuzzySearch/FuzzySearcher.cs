@@ -1,23 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
-using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat;
-using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure;
+using NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat;
+using NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Models;
+using NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataStructure;
 
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch
 {
     /// <summary>
     /// Fuzzy indexer uses the Levenshtein automaton and FB-Trie algorithm
     /// to find possible corrections for the given garbled characters
     /// </summary>
-    internal class FuzzyIndexer
+    internal class FuzzySearcher
     {
         Trie ForwardDictionary = new Trie();
 
         Trie BackwardDictionary = new Trie();
 
-        public FuzzyIndexer() { }
+        public FuzzySearcher() { }
 
-        public FuzzyIndexer(IEnumerable<string> charactersArray)
+        public FuzzySearcher(IEnumerable<string> charactersArray)
         {
             foreach (var characters in charactersArray)
             {

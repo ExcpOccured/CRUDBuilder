@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpgSQL.CRUDBuilder", "NpgSQL.CRUDBuilder\NpgSQL.CRUDBuilder.csproj", "{6551128E-B13E-4738-8CC8-836B6255B43A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpgSQL.CRUDBuilder.UnitTests", "NpgSQL.CRUDBuilder.UnitTests\NpgSQL.CRUDBuilder.UnitTests.csproj", "{D5EE46DD-6F77-458C-84C5-38A6B47A8688}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F420EF0D-293A-49BB-B1A5-7AD91AE60F38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27F75000-497A-4EBA-B8AF-49A73C7556BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,13 @@ Global
 		{6551128E-B13E-4738-8CC8-836B6255B43A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6551128E-B13E-4738-8CC8-836B6255B43A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6551128E-B13E-4738-8CC8-836B6255B43A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5EE46DD-6F77-458C-84C5-38A6B47A8688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5EE46DD-6F77-458C-84C5-38A6B47A8688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5EE46DD-6F77-458C-84C5-38A6B47A8688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5EE46DD-6F77-458C-84C5-38A6B47A8688}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6551128E-B13E-4738-8CC8-836B6255B43A} = {F420EF0D-293A-49BB-B1A5-7AD91AE60F38}
+		{D5EE46DD-6F77-458C-84C5-38A6B47A8688} = {27F75000-497A-4EBA-B8AF-49A73C7556BB}
 	EndGlobalSection
 EndGlobal

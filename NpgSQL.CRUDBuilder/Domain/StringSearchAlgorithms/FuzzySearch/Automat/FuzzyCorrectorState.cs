@@ -1,7 +1,7 @@
 using System;
-using NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.TrieDataStructure;
+using NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataStructure;
 
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
     internal readonly struct FuzzyCorrectorState
     {

@@ -1,4 +1,4 @@
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Models
 {
     internal static class Constants
     {

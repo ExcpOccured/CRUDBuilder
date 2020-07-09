@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
 using NpgSQL.CRUDBuilder.Domain.Exceptions;
+using NpgSQL.CRUDBuilder.Domain.Mapping;
 using NpgSQL.CRUDBuilder.Domain.Models.Interfaces;
 using NpgSQL.CRUDBuilder.Domain.Providers.Models;
+using NpgSQL.CRUDBuilder.Domain.Resolvers;
 
 namespace NpgSQL.CRUDBuilder.Domain.Providers
 {
@@ -14,36 +16,54 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
         public async Task ExecuteNonQuery(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
-            Func<ITransactionArgumentsModel, bool> dataPreValidateDelegate,
-            Func<ITransactionArgumentsModel, bool> dataPostValidateDelegate = null,
+            Func<ITransactionArgumentsModel, bool> argsValidateDelegate,
             CancellationToken cancellationToken = default)
         {
             var transactionExecuteState = await RunDataTransaction(connection, buildQueryDelegate,
-                transactionArgumentsModel, dataPreValidateDelegate, false, 
-                dataPostValidateDelegate, cancellationToken);
+                transactionArgumentsModel, argsValidateDelegate, false,
+                cancellationToken);
+
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (transactionExecuteState.State is TransactionResultState.Canceled)
+            {
+                return;
+            }
 
             if (transactionExecuteState.State is TransactionResultState.Failed)
             {
-                
+                TransactionExceptionResolver.TryResolve(transactionExecuteState);
             }
         }
 
         public async Task<TData> ExecuteData<TData>(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
-            Func<ITransactionArgumentsModel, bool> dataPreValidateDelegate,
-            Func<ITransactionArgumentsModel, bool> dataPostValidateDelegate = null,
+            Func<ITransactionArgumentsModel, bool> argsValidateDelegate,
             CancellationToken cancellationToken = default) where TData : class
         {
-            throw new NotImplementedException();
+            var transactionExecuteState = await RunDataTransaction(connection, buildQueryDelegate,
+                transactionArgumentsModel, argsValidateDelegate, true,
+                cancellationToken);
+
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (transactionExecuteState.State is TransactionResultState.Canceled)
+            {
+                return default;
+            }
+
+            if (transactionExecuteState.State is TransactionResultState.Failed)
+            {
+                TransactionExceptionResolver.TryResolve(transactionExecuteState);
+            }
+
+            return DtoPropsMapper.TryMapDtoProps<TData>(transactionExecuteState.DataReader);
         }
 
         private async Task<TransactionResult> RunDataTransaction(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
-            Func<ITransactionArgumentsModel, bool> preValidateDelegate,
+            Func<ITransactionArgumentsModel, bool> argsValidateDelegate,
             bool isDataRequestTransaction,
-            Func<ITransactionArgumentsModel, bool> postValidateDelegate = null,
             CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -51,21 +71,13 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
                 return new TransactionResult(TransactionResultState.Canceled);
             }
 
-            if (!preValidateDelegate(transactionArgumentsModel))
+            if (argsValidateDelegate(transactionArgumentsModel) == false)
             {
                 throw new InvalidTransactionArgumentException();
             }
 
-            if (!(postValidateDelegate is null))
-            {
-                if (!postValidateDelegate(transactionArgumentsModel))
-                {
-                    throw new InvalidTransactionArgumentException();
-                }
-            }
-
-            if (!(connection.State is ConnectionState.Open
-                  || connection.State is ConnectionState.Closed))
+            if ((connection.State == ConnectionState.Open
+                 || connection.State == ConnectionState.Closed) == false)
             {
                 throw new CorruptedConnectionException();
             }

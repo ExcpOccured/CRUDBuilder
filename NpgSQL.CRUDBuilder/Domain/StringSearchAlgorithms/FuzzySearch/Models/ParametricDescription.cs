@@ -1,4 +1,4 @@
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Models
 {
     /// <summary>
     /// This class stores precompiled transition tables

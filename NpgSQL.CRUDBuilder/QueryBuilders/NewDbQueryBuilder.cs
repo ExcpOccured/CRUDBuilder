@@ -16,9 +16,11 @@ namespace NpgSQL.CRUDBuilder.QueryBuilders
 
         private const string DefaultDbEncoding = "UTF-8";
 
-        public async Task ProcedureNewDbTransaction(NpgsqlConnection npgsqlConnection, string dbLayout,
+        public async Task ProcedureNewDbTransaction(NpgsqlConnection npgsqlConnection, 
+            string dbLayout,
             string dbOwner = null,
-            string dbCollactionEncoding = null, CancellationToken cancellationToken = default)
+            string dbCollactionEncoding = null,
+            CancellationToken cancellationToken = default)
         {
             var transactionProvider = new DataOverTransactionProvider();
 

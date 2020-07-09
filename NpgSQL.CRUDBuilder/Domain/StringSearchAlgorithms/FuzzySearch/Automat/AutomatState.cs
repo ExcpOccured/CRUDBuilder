@@ -1,4 +1,4 @@
-namespace NpgSQL.CRUDBuilder.Domain.IndexSearch.FuzzySearch.Automat
+namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
     public struct AutomatState
     {

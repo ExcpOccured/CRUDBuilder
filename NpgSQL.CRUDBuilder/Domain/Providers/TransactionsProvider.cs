@@ -2,12 +2,13 @@ using System;
 using System.Data;
 using System.Threading.Tasks;
 using Npgsql;
+using NpgSQL.CRUDBuilder.Domain.Exceptions;
 using NpgSQL.CRUDBuilder.Domain.Models.Interfaces;
 using NpgSQL.CRUDBuilder.Domain.Providers.Models;
 
 namespace NpgSQL.CRUDBuilder.Domain.Providers
 {
-    public class TransactionsProvider
+    internal class TransactionsProvider
     {
         public async Task<TransactionResult> ExecuteTransaction(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
@@ -71,7 +72,7 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
             {
                 if (tryRestoreTransactionState && exception.IsTransient)
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(TimeSpan.FromSeconds(5));
 
                     try
                     {
@@ -100,9 +101,13 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
                 return new TransactionResult(TransactionResultState.Completed);
             }
 
-            return reader is null 
-                ? new TransactionResult(TransactionResultState.Failed) 
-                : new TransactionResult(TransactionResultState.Completed, npgsqlDataReader: reader);
+            if (reader is null)
+            {
+                return new TransactionResult(TransactionResultState.Failed,
+                    new InnerException($"An exception occurred during initialization of {nameof(NpgsqlDataReader)}"));
+            }
+
+            return new TransactionResult(TransactionResultState.Completed, npgsqlDataReader: reader);
         }
     }
 }
