@@ -2,7 +2,7 @@
 
 # CRUD Provider
 
-This is a C# [NpgSQL](https://www.npgsql.org/) CRUD provider which allows use the four basic functions of persistent storage and then use them in F# or C# project.
+This is a C# [NpgSQL](https://www.npgsql.org/) CRUD provider which allows use the main basic functions(available for extensions) of persistent storage and then use them in F# or C# project.
 
 ## Examples
 
