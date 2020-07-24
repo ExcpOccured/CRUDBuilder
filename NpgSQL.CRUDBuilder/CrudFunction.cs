@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
-using NpgSQL.CRUDBuilder.QueryBuilders;
+using NpgSQL.CRUDBuilder.SDK.QueryBuilders;
 
 namespace NpgSQL.CRUDBuilder
 {
@@ -14,7 +14,9 @@ namespace NpgSQL.CRUDBuilder
             string dbCollactionEncoding = null,
             CancellationToken cancellationToken = default)
         {
-            var queryBuilder = new NewDbQueryBuilder();
+            var queryBuilder = new TransactionQueryBuilder();
+            
+            var query = queryBuilder.CompileTransactionExpression( )
 
             await queryBuilder.ProcedureNewDbTransaction(npgsqlConnection, dbLayout, dbOwner, dbCollactionEncoding,
                 cancellationToken);
@@ -26,7 +28,7 @@ namespace NpgSQL.CRUDBuilder
             string dbCollactionEncoding = null,
             CancellationToken cancellationToken = default)
         {
-            var queryBuilder = new NewDbQueryBuilder();
+            var queryBuilder = new NewDbCommandBuilder();
 
             foreach (var dbLayout in dbLayouts)
             {
