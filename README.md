@@ -28,6 +28,11 @@ Pack:
 
     .\build.sh --target Pack --Configuration Release
     
+
+## Contribute    
+
+Fork the repository, create a new branch, commit the issue/proposal and open pull request.    
+    
 ## License   
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
