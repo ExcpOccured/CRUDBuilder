@@ -16,9 +16,9 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch
 
         Trie BackwardDictionary = new Trie();
 
-        public FuzzySearcher() { }
+        internal FuzzySearcher() { }
 
-        public FuzzySearcher(IEnumerable<string> charactersArray)
+        internal FuzzySearcher(IEnumerable<string> charactersArray)
         {
             foreach (var characters in charactersArray)
             {
@@ -29,13 +29,13 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch
             }
         }
 
-        public void InsertCharacters(string characters)
+        internal void InsertCharacters(string characters)
         {
             ForwardDictionary.InsertCharacters(characters);
             BackwardDictionary.InsertCharacters(new string(characters.Reverse().ToArray()));
         }
 
-        public IList<string> GetCorrections2T(string typo)
+        internal IList<string> GetCorrections2T(string typo)
         {
             var corrections = new List<string>();
 
@@ -99,7 +99,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch
             return corrections.Distinct().ToList();
         }
 
-        public IList<string> GetCorrections1T(string typo)
+        internal IList<string> GetCorrections1T(string typo)
         {
             if (typo.Length <= 2)
             {

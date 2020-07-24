@@ -4,11 +4,11 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
 {
     internal class Trie
     {
-        public TrieNode root = new TrieNode(string.Empty);
+        internal TrieNode root = new TrieNode(string.Empty);
 
-        public Trie() { }
+        internal Trie() { }
 
-        public Trie(IEnumerable<string> lexicon)
+        internal Trie(IEnumerable<string> lexicon)
         {
             foreach (var word in lexicon)
             {
@@ -16,7 +16,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
             }
         }
 
-        public void InsertCharacters(string characters)
+        internal void InsertCharacters(string characters)
         {
             var argChars = characters.ToCharArray();
             var currentNode = root;
@@ -34,23 +34,23 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
             currentNode.IsCharsArray = true;
         }
         
-        public bool СontainsPrefix(string prefix)
+        internal bool СontainsPrefix(string prefix)
         {
             return Сontains(prefix, false);
         }
         
-        public bool СontainsWord(string word)
+        internal bool СontainsWord(string word)
         {
             return Сontains(word, true);
         }
         
-        public TrieNode GetChars(string word)
+        internal TrieNode GetChars(string word)
         {
             var node = GetNode(word);
             return node != null && node.IsCharsArray ? node : null;
         }
         
-        public TrieNode GetPrefix(string prefix)
+        internal TrieNode GetPrefix(string prefix)
         {
             return GetNode(prefix);
         }
@@ -61,7 +61,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
             return (node != null && node.IsCharsArray && word) || (!word && node != null);
         }
         
-        public TrieNode GetNode(string argString)
+        internal TrieNode GetNode(string argString)
         {
             return root.GetChildNodes(argString);
         }

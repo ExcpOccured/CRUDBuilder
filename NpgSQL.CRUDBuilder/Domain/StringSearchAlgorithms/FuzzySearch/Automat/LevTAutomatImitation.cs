@@ -5,21 +5,21 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
     internal class LevTAutomatImitation
     {
-        public readonly int AllowedModificationsCount;
+        internal readonly int AllowedModificationsCount;
 
-        public readonly int CharsLenght;
+        internal readonly int CharsLenght;
 
-        public readonly int VectorLength;
+        internal readonly int VectorLength;
 
-        public readonly int VectorCount;
+        internal readonly int VectorCount;
 
-        public readonly string Chars;
+        internal readonly string Chars;
 
-        public readonly int StateCount;
+        internal readonly int StateCount;
 
-        public int CurrentState { get; private set; }
+        internal int CurrentState { get; private set; }
 
-        public int CurrentOffset { get; private set; }
+        internal int CurrentOffset { get; private set; }
 
         private sbyte[,] _stateTransitions;
 
@@ -31,7 +31,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 
         private const string OffsetLengthExceptionMessage = "Offset should be between 0 and ";
 
-        public LevTAutomatImitation(string chars, int allowedModificationsCount)
+        internal LevTAutomatImitation(string chars, int allowedModificationsCount)
         {
             if (string.IsNullOrEmpty(chars))
             {
@@ -53,9 +53,9 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             UpdateMatrixes();
         }
 
-        public bool IsInEmptyState => CurrentState < 0 || CurrentOffset < 0;
+        internal bool IsInEmptyState => CurrentState < 0 || CurrentOffset < 0;
 
-        public int GetCharacteristicVector(char letter, int position)
+        internal int GetCharacteristicVector(char letter, int position)
         {
             var vector = 0;
             for (var index = position; index < Math.Min(Chars.Length, position + VectorLength); index++)
@@ -69,7 +69,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             return vector;
         }
 
-        public bool IsAcceptState(int? state, int? offset)
+        internal bool IsAcceptState(int? state, int? offset)
         {
             if (state < 0 || offset < 0)
             {
@@ -85,7 +85,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
                        (int) distanceToEnd];
         }
 
-        public bool IsInAcceptState => IsAcceptState(CurrentState, CurrentOffset);
+        internal bool IsInAcceptState => IsAcceptState(CurrentState, CurrentOffset);
 
         protected void UpdateMatrixes()
         {
@@ -119,7 +119,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             }
         }
 
-        public void LoadState(int? state, int offset)
+        internal void LoadState(int? state, int offset)
         {
             if (offset > CharsLenght || offset < 0)
             {
@@ -137,7 +137,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             UpdateMatrixes();
         }
 
-        public AutomatState? GetNextState(int vector)
+        internal AutomatState? GetNextState(int vector)
         {
             if (vector >= VectorCount)
             {
@@ -163,7 +163,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             return null;
         }
 
-        public void NextState(int vector)
+        internal void NextState(int vector)
         {
             var automatState = GetNextState(vector);
 
@@ -181,7 +181,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             }
         }
 
-        public void NextState(char letter)
+        internal void NextState(char letter)
         {
             if (IsInEmptyState)
             {
@@ -192,7 +192,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
             NextState(vector);
         }
 
-        public bool AcceptCharsEquivalence(string chars)
+        internal bool AcceptCharsEquivalence(string chars)
         {
             LoadState(0, 0);
 

@@ -9,7 +9,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms
 {
     internal class ReflectionTypeDefinition
     {
-        public List<string> GetTypePropsList(Type type, bool useAttributePolicy)
+        internal List<string> GetTypePropsList(Type type, bool useAttributePolicy)
         {
             var typeProps = GetTypeProperties(type);
 
@@ -23,7 +23,7 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms
             return typeProps.Select(info => info.Name).ToList();
         }
 
-        public List<PropertyInfo> GetTypePropsStringList(Type type, bool useAttributePolicy)
+        internal List<PropertyInfo> GetTypePropsStringList(Type type, bool useAttributePolicy)
         {
             var typeProps = GetTypeProperties(type);
 

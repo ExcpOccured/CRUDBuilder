@@ -3,7 +3,7 @@ using NpgSQL.CRUDBuilder.QueryBuilders.Interfaces;
 
 namespace NpgSQL.CRUDBuilder.QueryBuilders
 {
-    public class TableQueryBuilder : IQueryBuilder
+    internal class TableQueryBuilder : IQueryBuilder
     {
         public bool ValidateTransactionArguments(ITransactionArgumentsModel model)
         {

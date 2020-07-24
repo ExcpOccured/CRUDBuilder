@@ -1,9 +1,9 @@
 namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
-    public struct AutomatState
+    internal struct AutomatState
     {
-        public int State;
+        internal int State;
         
-        public int Offset;
+        internal int Offset;
     }
 }

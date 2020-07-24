@@ -5,13 +5,13 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.Automat
 {
     internal readonly struct FuzzyCorrectorState
     {
-        public readonly TrieNode Node;
+        internal readonly TrieNode Node;
         
-        public readonly int? AutomataState;
+        internal readonly int? AutomataState;
         
-        public readonly int AutomataOffset;
+        internal readonly int AutomataOffset;
 
-        public FuzzyCorrectorState(TrieNode node, int state, int offset)
+        internal FuzzyCorrectorState(TrieNode node, int state, int offset)
         {
             Node = node;
             AutomataState = state;

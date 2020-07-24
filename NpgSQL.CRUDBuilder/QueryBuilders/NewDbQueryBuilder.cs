@@ -10,13 +10,13 @@ using NpgSQL.CRUDBuilder.QueryBuilders.Interfaces;
 
 namespace NpgSQL.CRUDBuilder.QueryBuilders
 {
-    public class NewDbQueryBuilder : IQueryBuilder
+    internal class NewDbQueryBuilder : IQueryBuilder
     {
         private const string DefaultDbOwner = "postgres";
 
         private const string DefaultDbEncoding = "UTF-8";
 
-        public async Task ProcedureNewDbTransaction(NpgsqlConnection npgsqlConnection, 
+        internal async Task ProcedureNewDbTransaction(NpgsqlConnection npgsqlConnection, 
             string dbLayout,
             string dbOwner = null,
             string dbCollactionEncoding = null,

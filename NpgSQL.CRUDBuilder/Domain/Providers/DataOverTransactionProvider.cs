@@ -11,9 +11,9 @@ using NpgSQL.CRUDBuilder.Domain.Resolvers;
 
 namespace NpgSQL.CRUDBuilder.Domain.Providers
 {
-    public class DataOverTransactionProvider
+    internal class DataOverTransactionProvider
     {
-        public async Task ExecuteNonQuery(NpgsqlConnection connection,
+        internal async Task ExecuteNonQuery(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
             Func<ITransactionArgumentsModel, bool> argsValidateDelegate,
@@ -35,7 +35,7 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
             }
         }
 
-        public async Task<TData> ExecuteData<TData>(NpgsqlConnection connection,
+        internal async Task<TData> ExecuteData<TData>(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel,
             Func<ITransactionArgumentsModel, bool> argsValidateDelegate,

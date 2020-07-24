@@ -3,8 +3,8 @@ using NpgSQL.CRUDBuilder.Domain.Models.Interfaces;
 
 namespace NpgSQL.CRUDBuilder.Domain.Models
 {
-    public abstract class TransactionArgumentsModel : ITransactionArgumentsModel
+    internal abstract class TransactionArgumentsModel : ITransactionArgumentsModel
     {
-        public NpgsqlConnection NpgsqlConnection { get; set; }
+        internal NpgsqlConnection NpgsqlConnection { get; set; }
     }
 }

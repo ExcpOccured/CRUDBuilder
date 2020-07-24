@@ -10,7 +10,7 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers
 {
     internal class TransactionsProvider
     {
-        public async Task<TransactionResult> ExecuteTransaction(NpgsqlConnection connection,
+        internal async Task<TransactionResult> ExecuteTransaction(NpgsqlConnection connection,
             Func<ITransactionArgumentsModel, string> buildQueryDelegate,
             ITransactionArgumentsModel transactionArgumentsModel, bool isDataRequestTransaction,
             bool tryRestoreTransactionState = true)

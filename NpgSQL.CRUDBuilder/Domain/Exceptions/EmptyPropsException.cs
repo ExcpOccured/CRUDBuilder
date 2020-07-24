@@ -2,10 +2,10 @@ using System;
 
 namespace NpgSQL.CRUDBuilder.Domain.Exceptions
 {
-    public class EmptyPropsException : Exception
+    internal class EmptyPropsException : Exception
     {
-        private const string ExceptionMessage = "The type must contain public properties!";
+        private const string ExceptionMessage = "The type must contain internal properties!";
 
-        public EmptyPropsException() : base(ExceptionMessage) { }
+        internal EmptyPropsException() : base(ExceptionMessage) { }
     }
 }

@@ -1,6 +1,6 @@
 namespace NpgSQL.CRUDBuilder.Domain.Providers.Models
 {
-    public enum TransactionResultState
+    internal enum TransactionResultState
     {
         Completed,
         

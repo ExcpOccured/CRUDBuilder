@@ -7,11 +7,11 @@ namespace NpgSQL.CRUDBuilder.Domain.Providers.Models
 {
     internal readonly struct TransactionDelegate
     {
-        public readonly Func<Task> NonQueryDelegate;
+        internal readonly Func<Task> NonQueryDelegate;
 
-        public readonly ExecuteQueryDataDelegate? QueryWithDataDelegate;
+        internal readonly ExecuteQueryDataDelegate? QueryWithDataDelegate;
 
-        public TransactionDelegate(Func<Task> nonQueryDelegate,
+        internal TransactionDelegate(Func<Task> nonQueryDelegate,
             ExecuteQueryDataDelegate queryWithDataDelegate = null)
         {
             NonQueryDelegate = nonQueryDelegate;

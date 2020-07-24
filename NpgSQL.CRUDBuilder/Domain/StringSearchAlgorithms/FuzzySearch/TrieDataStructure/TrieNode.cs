@@ -4,43 +4,54 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
 {
     internal class TrieNode
     {
-        public readonly string Key;
+        internal readonly string Key;
 
-        public Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
+        internal Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
 
-        public TrieNode(string key)
+        internal TrieNode(string key)
         {
             Key = key;
         }
+        
+        public override string ToString()
+        {
+            return Key;
+        }
 
-        public bool AddChild(char symbol, TrieNode child)
+        internal bool AddChild(char symbol, TrieNode child)
         {
             Children.Add(symbol, child);
             return true;
         }
 
-        public bool ContainsChildValue(char letter)
+        internal bool ContainsChildValue(char letter)
         {
             return Children.ContainsKey(letter);
         }
 
-        public TrieNode GetChildNodes(char letter)
+        internal TrieNode GetChildNodes(char letter)
         {
             return Children.ContainsKey(letter) ? Children[letter] : null;
         }
 
-        public bool IsCharsArray { get; set; }
+        internal bool IsCharsArray { get; set; }
 
-        public TrieNode GetChildNodes(string charsOrPrefix)
+        internal TrieNode GetChildNodes(string charsOrPrefix)
         {
             return string.IsNullOrEmpty(charsOrPrefix) ? null : GetChildNodes(charsOrPrefix.ToCharArray());
         }
 
-        public TrieNode GetChildNodes(char[] letters)
+        internal TrieNode GetTrieNode(string chars)
+        {
+            var node = GetChildNodes(chars);
+            return node != null && node.IsCharsArray ? node : null;
+        }
+
+        private TrieNode GetChildNodes(IReadOnlyList<char> letters)
         {
             var currentNode = this;
             
-            for (var index = 0; index < letters.Length && currentNode != null; index++)
+            for (var index = 0; index < letters.Count && currentNode != null; index++)
             {
                 currentNode = currentNode.GetChildNodes(letters[index]);
                 if (currentNode == null)
@@ -50,17 +61,6 @@ namespace NpgSQL.CRUDBuilder.Domain.StringSearchAlgorithms.FuzzySearch.TrieDataS
             }
 
             return currentNode;
-        }
-
-        public TrieNode GetTrieNode(string chars)
-        {
-            var node = GetChildNodes(chars);
-            return node != null && node.IsCharsArray ? node : null;
-        }
-
-        public override string ToString()
-        {
-            return Key;
         }
     }
 }

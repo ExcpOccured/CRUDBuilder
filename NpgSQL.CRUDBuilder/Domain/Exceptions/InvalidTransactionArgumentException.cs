@@ -2,10 +2,10 @@ using System;
 
 namespace NpgSQL.CRUDBuilder.Domain.Exceptions
 {
-    public class InvalidTransactionArgumentException : Exception
+    internal class InvalidTransactionArgumentException : Exception
     {
         private const string ExceptionMessage = "Error validating transaction parameters!";
 
-        public InvalidTransactionArgumentException() : base(ExceptionMessage) { }
+        internal InvalidTransactionArgumentException() : base(ExceptionMessage) { }
     }
 }

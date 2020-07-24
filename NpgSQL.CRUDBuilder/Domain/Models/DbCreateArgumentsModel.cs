@@ -1,11 +1,11 @@
 namespace NpgSQL.CRUDBuilder.Domain.Models
 {
-    public class DbCreateArgumentsModel : TransactionArgumentsModel
+    internal class DbCreateArgumentsModel : TransactionArgumentsModel
     {
-        public string DbLayout { get; set; }
+        internal string DbLayout { get; set; }
 
-        public string DbOwner { get; set; }
+        internal string DbOwner { get; set; }
 
-        public string DbCollationEncoding { get; set; }
+        internal string DbCollationEncoding { get; set; }
     }
 }
