@@ -4,18 +4,19 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
+using NpgSQL.CRUDBuilder.SDK.Commands.Models.Transaction;
 using NpgSQL.CRUDBuilder.SDK.Exceptions;
 using NpgSQL.CRUDBuilder.SDK.Mapping;
-using NpgSQL.CRUDBuilder.SDK.Providers.Models;
 
 [assembly: InternalsVisibleTo("NpgSQL.CRUDBuilder")]
 
 namespace NpgSQL.CRUDBuilder.SDK.Commands
 {
-    internal class NpgSqlCrudCommand
+    internal abstract class NpgSqlCrudCommand
     {
         internal async Task ExecuteNonQuery(NpgsqlConnection connection,
-            string query, CancellationToken cancellationToken = default)
+            string query, bool keepConnectionOpen = true,
+            CancellationToken cancellationToken = default)
         {
             var transactionExecuteState = await ExecuteTransaction(connection, query,
                 false, cancellationToken);
@@ -30,10 +31,16 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands
             {
                 TransactionExceptionMapper.TryToMap(transactionExecuteState);
             }
+
+            if (!keepConnectionOpen)
+            {
+                await connection.DisposeAsync();
+            }
         }
 
         internal async Task<TData> ExecuteData<TData>(NpgsqlConnection connection,
-            string query, CancellationToken cancellationToken = default) where TData : class
+            string query, bool keepConnectionOpen = true, CancellationToken cancellationToken = default)
+            where TData : class
         {
             var transactionExecuteState = await ExecuteTransaction(connection, query, true,
                 cancellationToken);
@@ -47,6 +54,11 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands
             if (transactionExecuteState.State is TransactionResultState.Failed)
             {
                 TransactionExceptionMapper.TryToMap(transactionExecuteState);
+            }
+            
+            if (!keepConnectionOpen)
+            {
+                await connection.DisposeAsync();
             }
 
             return DtoPropsMapper.TryMapDtoProps<TData>(transactionExecuteState.DataReader);

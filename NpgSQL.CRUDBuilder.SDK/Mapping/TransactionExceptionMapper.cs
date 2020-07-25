@@ -1,4 +1,4 @@
-using NpgSQL.CRUDBuilder.SDK.Providers.Models;
+using NpgSQL.CRUDBuilder.SDK.Commands.Models.Transaction;
 
 namespace NpgSQL.CRUDBuilder.SDK.Mapping
 {

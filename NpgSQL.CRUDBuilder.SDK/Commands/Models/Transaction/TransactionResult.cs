@@ -3,7 +3,7 @@
 using System;
 using Npgsql;
 
-namespace NpgSQL.CRUDBuilder.SDK.Providers.Models
+namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Transaction
 {
     internal readonly struct TransactionResult
     {

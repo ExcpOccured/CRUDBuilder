@@ -1,4 +1,4 @@
-namespace NpgSQL.CRUDBuilder.SDK.Providers.Models
+namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Transaction
 {
     internal enum TransactionResultState
     {

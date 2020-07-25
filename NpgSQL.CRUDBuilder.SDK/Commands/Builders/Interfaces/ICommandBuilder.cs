@@ -1,12 +1,14 @@
-using NpgSQL.CRUDBuilder.SDK.Commands.Models.Interfaces;
+using NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments.Interfaces;
 
 namespace NpgSQL.CRUDBuilder.SDK.Commands.Builders.Interfaces
 {
-    internal interface ICommandBuilder<in TTransactionModel>
-        where TTransactionModel : ITransactionArgumentsModel
+    internal interface ICommandBuilder<out TTransactionArgumentsModel>
+        where TTransactionArgumentsModel : ITransactionArgumentsModel
     {
-        bool ValidateQueryArgumentsModel(TTransactionModel argumentsModel);
+        TTransactionArgumentsModel ArgumentsModel { get; }
 
-        string BuildQuery(TTransactionModel argumentsModel);
+        bool ValidateQueryArgumentsModel();
+
+        string BuildQuery();
     }
 }

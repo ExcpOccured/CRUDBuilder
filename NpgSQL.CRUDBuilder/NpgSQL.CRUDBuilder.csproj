@@ -6,10 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Npgsql" Version="5.0.0-alpha1"/>
+        <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NpgSQL.CRUDBuilder.SDK\NpgSQL.CRUDBuilder.SDK.csproj"/>
+        <ProjectReference Include="..\NpgSQL.CRUDBuilder.SDK\NpgSQL.CRUDBuilder.SDK.csproj" />
     </ItemGroup>
 </Project>

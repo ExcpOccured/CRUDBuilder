@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using NpgSQL.CRUDBuilder.SDK.Exceptions;
 
 namespace NpgSQL.CRUDBuilder.SDK.SearchingAlgorithms.EquivalenceSearch
 {

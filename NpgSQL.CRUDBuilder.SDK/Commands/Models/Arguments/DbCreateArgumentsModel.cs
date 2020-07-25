@@ -1,7 +1,7 @@
 using Npgsql;
-using NpgSQL.CRUDBuilder.SDK.Commands.Models.Interfaces;
+using NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments.Interfaces;
 
-namespace NpgSQL.CRUDBuilder.SDK.Commands.Models
+namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments
 {
     internal class DbCreateArgumentsModel : TransactionArgumentsModel, ITransactionArgumentsModel
     {

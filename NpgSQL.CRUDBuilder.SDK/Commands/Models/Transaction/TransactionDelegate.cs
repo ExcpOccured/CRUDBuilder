@@ -3,7 +3,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace NpgSQL.CRUDBuilder.SDK.Providers.Models
+namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Transaction
 {
     internal readonly struct TransactionDelegate
     {

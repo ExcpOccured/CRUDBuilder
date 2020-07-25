@@ -2,41 +2,48 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using NpgSQL.CRUDBuilder.SDK.Commands.Builders.Interfaces;
-using NpgSQL.CRUDBuilder.SDK.Commands.Models;
+using NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments;
 using NpgSQL.CRUDBuilder.SDK.Extensions;
 
 [assembly: InternalsVisibleTo("NpgSQL.CRUDBuilder")]
 
 namespace NpgSQL.CRUDBuilder.SDK.Commands.Builders
 {
-    internal class DbCreationCommandBuilder : ICommandBuilder<DbCreateArgumentsModel>
+    internal class DbCreationCommandBuilder : NpgSqlCrudCommand, ICommandBuilder<DbCreateArgumentsModel>
     {
         private const string DefaultDbOwner = "postgres";
 
         private const string DefaultDbEncoding = "UTF-8";
 
-        public bool ValidateQueryArgumentsModel(DbCreateArgumentsModel argumentsModel)
+        public DbCreationCommandBuilder(DbCreateArgumentsModel argumentsModel)
         {
-            if (argumentsModel.NpgsqlConnection is null)
+            ArgumentsModel = argumentsModel;
+        }
+
+        public DbCreateArgumentsModel ArgumentsModel { get; }
+
+        public bool ValidateQueryArgumentsModel()
+        {
+            if (ArgumentsModel.NpgsqlConnection is null)
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(argumentsModel.DbLayout))
+            if (string.IsNullOrEmpty(ArgumentsModel.DbLayout))
             {
                 return false;
             }
 
-            if (argumentsModel.DbOwner != null)
+            if (ArgumentsModel.DbOwner != null)
             {
-                if (string.IsNullOrEmpty(argumentsModel.DbOwner))
+                if (string.IsNullOrEmpty(ArgumentsModel.DbOwner))
                 {
                     return false;
                 }
             }
 
-            if (!(argumentsModel.DbCollationEncoding is null) &&
-                string.IsNullOrEmpty(argumentsModel.DbCollationEncoding))
+            if (!(ArgumentsModel.DbCollationEncoding is null) &&
+                string.IsNullOrEmpty(ArgumentsModel.DbCollationEncoding))
             {
                 return false;
             }
@@ -44,22 +51,22 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands.Builders
             return true;
         }
 
-        public string BuildQuery(DbCreateArgumentsModel argumentsModel)
+        public string BuildQuery()
         {
             var queryBuilder = new StringBuilder();
 
-            var dbOwner = string.IsNullOrEmpty(argumentsModel.DbOwner)
+            var dbOwner = string.IsNullOrEmpty(ArgumentsModel.DbOwner)
                 ? DefaultDbOwner
-                : argumentsModel.DbOwner;
+                : ArgumentsModel.DbOwner;
 
-            var dbEncoding = string.IsNullOrEmpty(argumentsModel.DbCollationEncoding)
+            var dbEncoding = string.IsNullOrEmpty(ArgumentsModel.DbCollationEncoding)
                 ? DefaultDbEncoding
-                : argumentsModel.DbCollationEncoding;
+                : ArgumentsModel.DbCollationEncoding;
 
             var localeAliasPrefix = Thread.CurrentThread.CurrentCulture.Name.AdaptLocaleAlias();
             var lcTypeString = $"'{localeAliasPrefix}.{dbEncoding}'";
 
-            queryBuilder.AppendLine($"CREATE DATABASE {argumentsModel.DbLayout}");
+            queryBuilder.AppendLine($"CREATE DATABASE {ArgumentsModel.DbLayout}");
             queryBuilder.AppendLine("WITH");
             queryBuilder.AppendLine($"OWNER = {dbOwner}");
             queryBuilder.AppendLine($"LC_COLLATE = {lcTypeString}");

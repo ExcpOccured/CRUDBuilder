@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace NpgSQL.CRUDBuilder.SDK.Commands.Models
+namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments
 {
     internal abstract class TransactionArgumentsModel
     {
