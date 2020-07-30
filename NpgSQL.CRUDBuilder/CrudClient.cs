@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using NpgSQL.CRUDBuilder.SDK.QueryBuilders;
 
 namespace NpgSQL.CRUDBuilder
 {
-    public class CrudClient
+    public class CrudClient : ICrudClient
     {
         public async Task CreateDatabase(NpgsqlConnection sqlConnection,
             string dbLayout,
@@ -40,8 +41,34 @@ namespace NpgSQL.CRUDBuilder
         {
             foreach (var dbLayout in dbLayouts)
             {
-                await CreateDatabase(sqlConnection, dbLayout, dbOwner, dbCollactionEncoding, keepConnectionOpen,
+                await CreateDatabase(sqlConnection, dbLayout, dbOwner, dbCollactionEncoding, true,
                     cancellationToken);
+            }
+
+            if (!keepConnectionOpen)
+            {
+                await new TransactionDispatcherBuilder().TryToDisposeConnection(sqlConnection);
+            }
+        }
+
+        public Task CreateTable<TTable>(NpgsqlConnection sqlConnection, TTable table, bool keepConnectionOpen = true,
+            CancellationToken cancellationToken = default) where TTable : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task CreateTables<TTable>(NpgsqlConnection sqlConnection, IEnumerable<TTable> tables, 
+            bool keepConnectionOpen = true,
+            CancellationToken cancellationToken = default) where TTable : class
+        {
+            foreach (var table in tables)
+            {
+                await CreateTable(sqlConnection, table, true, cancellationToken);
+            }
+            
+            if (!keepConnectionOpen)
+            {
+                await new TransactionDispatcherBuilder().TryToDisposeConnection(sqlConnection);
             }
         }
     }

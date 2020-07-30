@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using NpgSQL.CRUDBuilder.SDK.Commands.Builders.Interfaces;
 using NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments.Interfaces;
@@ -13,10 +12,15 @@ namespace NpgSQL.CRUDBuilder.SDK.QueryBuilders
     {
         internal string CompileTransactionExpression<TTransactionArgumentsModel, TCommandBuilder>(
             TCommandBuilder commandBuilder,
-            Expression<Func<TTransactionArgumentsModel, string>> expression = null)
+            Func<string> expression = null)
             where TTransactionArgumentsModel : ITransactionArgumentsModel
             where TCommandBuilder : ICommandBuilder<ITransactionArgumentsModel>
         {
+            if (!(expression is null))
+            {
+                return expression();
+            }
+
             if (!commandBuilder.ValidateQueryArgumentsModel())
             {
                 throw new InvalidTransactionArgumentException();

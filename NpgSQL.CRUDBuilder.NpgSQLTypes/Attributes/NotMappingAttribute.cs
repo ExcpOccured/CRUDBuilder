@@ -1,6 +1,6 @@
 using System;
 
-namespace NpgSQL.CRUDBuilder.DataTypes.Attributes
+namespace NpgSQL.CRUDBuilder.NpgSQLTypes.Attributes
 {
     public class NotMappingAttribute : Attribute { }
 }

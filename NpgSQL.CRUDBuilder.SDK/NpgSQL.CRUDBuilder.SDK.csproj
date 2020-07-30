@@ -9,6 +9,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NpgSQL.CRUDBuilder.DataTypes\NpgSQL.CRUDBuilder.DataTypes.csproj" />
+      <ProjectReference Include="..\NpgSQL.CRUDBuilder.NpgSQLTypes\NpgSQL.CRUDBuilder.NpgSQLTypes.csproj" />
     </ItemGroup>
 </Project>
