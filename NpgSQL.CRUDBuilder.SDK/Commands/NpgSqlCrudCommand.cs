@@ -55,25 +55,13 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands
             {
                 TransactionExceptionMapper.TryToMap(transactionExecuteState);
             }
-            
+
             if (!keepConnectionOpen)
             {
                 await TryToDisposeConnection(connection);
             }
 
             return DtoPropsMapper.TryMapDtoProps<TData>(transactionExecuteState.DataReader);
-        }
-
-        internal async Task TryToDisposeConnection(NpgsqlConnection connection)
-        {
-            try
-            {
-                await connection.DisposeAsync();
-            }
-            catch (Exception exception)
-            {
-                TransactionExceptionMapper.TryToMap(exception);
-            }
         }
 
         private async Task<TransactionResult> ExecuteTransaction(NpgsqlConnection connection,
@@ -189,6 +177,18 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands
             }
 
             return new TransactionResult(TransactionResultState.Completed, npgsqlDataReader: reader);
+        }
+
+        private static async Task TryToDisposeConnection(IAsyncDisposable connection)
+        {
+            try
+            {
+                await connection.DisposeAsync();
+            }
+            catch (Exception exception)
+            {
+                TransactionExceptionMapper.TryToMap(exception);
+            }
         }
     }
 }
