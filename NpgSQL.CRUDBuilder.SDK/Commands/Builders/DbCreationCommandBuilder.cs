@@ -24,7 +24,7 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands.Builders
 
         public bool ValidateQueryArgumentsModel()
         {
-            if (ArgumentsModel.NpgsqlConnection is null)
+            if (ArgumentsModel.Connection is null)
             {
                 return false;
             }

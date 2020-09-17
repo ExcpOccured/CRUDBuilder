@@ -33,10 +33,13 @@ namespace NpgSQL.CRUDBuilder
             await commandBuilder.ExecuteNonQuery(sqlConnection, query, keepConnectionOpen, cancellationToken);
         }
 
-        public Task CreateTable<TTable>(NpgsqlConnection sqlConnection, TTable table, bool keepConnectionOpen = true,
+        public async Task CreateTable<TTable>(NpgsqlConnection sqlConnection, TTable table,
+            bool keepConnectionOpen = true,
             CancellationToken cancellationToken = default) where TTable : class
         {
-            throw new NotImplementedException();
+            var queryBuilder = new TransactionQueryBuilder();
+            
+            
         }
     }
 }

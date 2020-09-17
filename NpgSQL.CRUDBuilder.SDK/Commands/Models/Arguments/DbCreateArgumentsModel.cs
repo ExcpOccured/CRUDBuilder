@@ -9,13 +9,18 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments
 
         private const string DefaultDbEncoding = "UTF-8";
 
-        public DbCreateArgumentsModel(NpgsqlConnection npgsqlConnection, string dbLayout, string dbOwner,
-            string dbCollationEncoding)
+        public DbCreateArgumentsModel(NpgsqlConnection connection, string dbLayout, string dbOwner,
+            string dbCollationEncoding) : base(connection)
         {
             DbLayout = dbLayout;
-            DbOwner = dbOwner ?? DefaultDbOwner;
-            DbCollationEncoding = dbCollationEncoding ?? DefaultDbEncoding;
-            NpgsqlConnection = npgsqlConnection;
+            
+            DbOwner = string.IsNullOrEmpty(dbOwner) 
+                ? DefaultDbOwner
+                : dbOwner;
+            
+            DbCollationEncoding = string.IsNullOrEmpty(dbCollationEncoding) 
+                ? DefaultDbEncoding 
+                : dbCollationEncoding;
         }
 
         internal string DbLayout { get; }

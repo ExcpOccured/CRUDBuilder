@@ -4,13 +4,13 @@ namespace NpgSQL.CRUDBuilder.NpgSQLTypes.Attributes
 {
     public class NpgSqlDataTypeAttribute : Attribute
     {
-        private readonly NpgSqlType _npgSqlType;
+        private readonly NpgSqlType _sqlType;
 
         private readonly int? _length;
         
-        public NpgSqlDataTypeAttribute(NpgSqlType npgSqlType, int? length = null)
+        public NpgSqlDataTypeAttribute(NpgSqlType sqlType, int? length = null)
         {
-            _npgSqlType = npgSqlType;
+            _sqlType = sqlType;
             _length = length;
         }
     }

@@ -4,6 +4,11 @@ namespace NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments
 {
     internal abstract class TransactionArgumentsModel
     {
-        public NpgsqlConnection NpgsqlConnection { get; set; }
+        public NpgsqlConnection Connection { get; }
+
+        protected TransactionArgumentsModel(NpgsqlConnection connection)
+        {
+            Connection = connection;
+        }
     }
 }

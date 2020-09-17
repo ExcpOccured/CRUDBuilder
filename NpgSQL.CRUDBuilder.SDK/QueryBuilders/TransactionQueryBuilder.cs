@@ -4,7 +4,6 @@ using NpgSQL.CRUDBuilder.SDK.Commands.Models.Arguments.Interfaces;
 using NpgSQL.CRUDBuilder.SDK.Exceptions;
 
 [assembly: InternalsVisibleTo("NpgSQL.CRUDBuilder")]
-
 namespace NpgSQL.CRUDBuilder.SDK.QueryBuilders
 {
     internal class TransactionQueryBuilder
